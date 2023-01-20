@@ -245,13 +245,13 @@ mod tests {
     fn test_parse_comment() {
         let line = String::from(r#"# foo bar"#);
         let result = DocItem::new();
-        assert_eq!(parse_comment(line, result).description[0], "foo bar");
+        assert_eq!(parse_comment(&line, result).description[0], "foo bar");
     }
 
     #[test]
     fn test_parse_comment2() {
         let line = String::from(r#"#foo bar"#);
         let result = DocItem::new();
-        assert_eq!(parse_comment(line, result).description[0], "foo bar");
+        assert_eq!(parse_comment(&line, result).description[0], "foo bar");
     }
 }

@@ -60,7 +60,7 @@ alias tp := testp
     -rm bom.txt > /dev/null 2>&1
     -rm tests.txt > /dev/null 2>&1
     -rm tokei.txt > /dev/null 2>&1
-    -rm my_application.log > /dev/null 2>&1
+    -rm {{application}}.log > /dev/null 2>&1
 
 # Rebuilds the changelog
 @cliff: changelog
@@ -68,20 +68,17 @@ alias tp := testp
 # Documents the project, lints it, builds and installs the release version, and cleans up
 @release: format changelog
     cargo lbuild --release  --color 'always'
-    -cp {{invocation_directory()}}/target/release/my_application /usr/local/bin/
-    -cp {{invocation_directory()}}/target/release/id3show /usr/local/bin/
-    -{{invocation_directory()}}/target/release/id3cli-gen
-    echo "Moving Fig and man files."
-    -mv {{invocation_directory()}}/my_application.1 /usr/local/share/man/man1/
-    -mv {{invocation_directory()}}/my_application.js ~/.fig/autocomplete/
+    -cp {{invocation_directory()}}/target/release/{{application}} /usr/local/bin/
+    # echo "Moving Fig and man files."
+    # -mv {{invocation_directory()}}/{{application}}.1 /usr/local/share/man/man1/
+    # -mv {{invocation_directory()}}/{{application}}.js ~/.fig/autocomplete/
     cargo clean
 
 # Documents the project, builds and installs the release version, and cleans up
 @releasea: format changelog
     cargo lbuild --release  --color 'always' --target aarch64-apple-darwin
     cargo strip --target aarch64-apple-darwin
-    cp {{invocation_directory()}}/target/aarch64-apple-darwin/release/my_application /usr/local/bin/
-    cp {{invocation_directory()}}/target/aarch64-apple-darwin/release/id3show /usr/local/bin/
+    cp {{invocation_directory()}}/target/aarch64-apple-darwin/release/{{application}} /usr/local/bin/
     cargo clean
 
 # Build the documentation
@@ -208,7 +205,7 @@ alias tp := testp
 
 # Copy this settings files to the templates directory
 @just:
-    -sed "s#{{application}}#my_application#" justfile > ~/CloudStation/Source/_Templates/justfile.template
+    -sed "s#{{application}}#{{application}}#" justfile > ~/CloudStation/Source/_Templates/justfile.template
     -cp {{invocation_directory()}}/deny.toml ~/CloudStation/Source/_Templates/deny.toml
     -cp {{invocation_directory()}}/cliff.toml ~/CloudStation/Source/_Templates/cliff.toml
 
@@ -240,13 +237,13 @@ alias tp := testp
 
 # Run the program with a bunch of parameters to test things
 @runit:
-    -rm my_application.log
-    target/debug/my_application \
+    -rm {{application}}.log
+    target/debug/{{application}} \
         --pfc folder.jpg --pfc Front.jpg \
         --pbc Back.jpg --pbc Back-Cover.jpg \
         --psf Artwork --psf "." --psf ".." \
         --pms 300 \
         --pf cover-small.jpg --pb back-small.jpg  \
-        -l my_application/debug.yaml \
+        -l {{application}}/debug.yaml \
         music/01-13\ Surf\'s\ Up.flac \
         -r
