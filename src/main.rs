@@ -1,91 +1,71 @@
-use clap::{Command, Arg}; // Command line
-use std::error::Error;
+//! The main binary file responsible for parsing the Terraform files and outputting the Markdown code.
+//!
+//! Usage: `tfdoc [-t] PATH`
+//!
+//! If PATH is omitted, the current directory is used.
+//!
+//! Use the `-t` parameter to output the documentation in table format rather than list format.
 
-// Logging
-use env_logger::{Builder, Target};
-use log::LevelFilter;
+use std::env;
+use std::io;
+use std::path::Path;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// This is where the magic happens.
-fn run() -> Result<(), Box<dyn Error>> {
-    // Set up the command line. Ref https://docs.rs/clap for details.
-    let cli_args = Command::new(clap::crate_name!())
-        .about(clap::crate_description!())
-        .version(clap::crate_version!())
-        // .author(clap::crate_authors!("\n"))
-        .long_about("This program will do something.")
-        .arg(
-            Arg::new("read")
-                .value_name("FILE(S)")
-                .help("One or more file(s) to process. Wildcards and multiple_occurrences files (e.g. 2019*.pdf 2020*.pdf) are supported.")
-                .takes_value(true)
-                .multiple_occurrences(true),
-        )
-        .arg( // Hidden debug parameter
-            Arg::new("debug")
-                .short('d')
-                .long("debug")
-                .multiple_occurrences(true)
-                .help("Output debug information as we go. Supply it twice for trace-level logs.")
-                .takes_value(false)
-                .hide(true),
-        )
-        .arg( // Don't print any information
-            Arg::new("quiet")
-                .short('q')
-                .long("quiet")
-                .multiple_occurrences(false)
-                .help("Don't produce any output except errors while working.")
-                .takes_value(false)
-        )
-        .arg( // Print summary information
-            Arg::new("print-summary")
-                .short('p')
-                .long("print-summary")
-                .multiple_occurrences(false)
-                .help("Print summary detail for each session processed.")
-                .takes_value(false)
-        )
-        .arg( // Don't export detail information
-            Arg::new("detail-off")
-                .short('o')
-                .long("detail-off")
-                .multiple_occurrences(false)
-                .help("Don't export detailed information about each file processed.")
-                .takes_value(false)
-        )
-        .get_matches();
+use env_logger::Env;
 
-    // create a log builder
-    let mut logbuilder = Builder::new();
+mod parser;
+mod printer;
+mod types;
+mod util;
 
-    // Figure out what log level to use.
-    if cli_args.is_present("quiet") {
-        logbuilder.filter_level(LevelFilter::Off);
+/// The main function responsible for actually carrying out the work.
+fn run_app() -> io::Result<()> {
+    // Look for the path or just use the current directory if none is given
+    let use_tables: bool;
+    let path_arg: String;
+
+    // If the -t parameter has been supplied, output the contents as tables
+    if env::args().len() > 1 && env::args().nth(1).unwrap_or_default() == *"-t" {
+        use_tables = true;
+        path_arg = env::args().nth(2).unwrap_or_else(|| String::from("./"));
+        log::debug!("Using tables. Path: {path_arg}");
     } else {
-        match cli_args.occurrences_of("debug") {
-            0 => logbuilder.filter_level(LevelFilter::Info),
-            1 => logbuilder.filter_level(LevelFilter::Debug),
-            _ => logbuilder.filter_level(LevelFilter::Trace),
-        };
+        use_tables = false;
+        path_arg = env::args().nth(1).unwrap_or_else(|| String::from("./"));
+        log::debug!("Using lists. Path: {path_arg}");
     }
 
-    // Initialize logging
-    logbuilder.target(Target::Stdout).init();
+    // Find just the Terraform files
+    let tf_files = util::list_tf_files(Path::new(&path_arg))?;
 
-    // Everything is a-okay in the end
+    // Parse the files found and put them into a list
+    let mut result: Vec<types::DocItem> = vec![];
+
+    for tf_file in &tf_files {
+        result.append(&mut parser::parse_hcl(tf_file.clone())?);
+        log::debug!("main::result = {:?}", result);
+    }
+
+    // Output the resulting markdown
+    printer::render(&result, use_tables);
+    printer::print_files(&tf_files, use_tables);
+
+    // Return safely
     Ok(())
-} // fn run()
+}
 
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// The actual executable function that gets called when the program in invoked.
+/// Calls `run_app` and exits with error code `0` if successful. Otherwise prints an error message to `stderr` and exits with error code `1`.
 fn main() {
-    std::process::exit(match run() {
-        Ok(_) => 0, // everying is hunky dory - exit with code 0 (success)
+    // Enable logging
+    let env = Env::default().filter_or("TFDOC_LOG", "info");
+
+    env_logger::init_from_env(env);
+
+    // Run the application
+    ::std::process::exit(match run_app() {
+        Ok(_) => 0,
         Err(err) => {
-            log::error!("{}", err.to_string().replace("\"", ""));
-            1 // exit with a non-zero return code, indicating a problem
+            eprintln!("error: {err}");
+            1
         }
     });
 }
