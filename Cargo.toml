@@ -1,0 +1,15 @@
+[package]
+name = "tfdoc"
+edition = "2021"
+version = "0.2.0"
+authors = ["Even Solberg <even.solberg@gmail.com>, Thomas Maurin <maur1th@users.noreply.github.com>"]
+license = "Apache-2.0"
+repository = "https://github.com/evensolberg/tfdoc"
+categories = ["development-tools"]
+keywords = ["terraform", "documentation"]
+description = "Generate Terraform module documentation"
+readme = "README.md"
+
+[dependencies]
+env_logger = "0.10.0"
+log = "0.4.17"
