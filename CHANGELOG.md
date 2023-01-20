@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### FEAT
+
+- Moved from a crate to an app
+
 ### NEW
 
 - Initial commit
