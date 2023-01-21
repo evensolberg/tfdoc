@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### CHORE
+
+- Update changelog
+
 ### FEAT
 
 - Moved from a crate to an app
