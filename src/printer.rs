@@ -18,8 +18,8 @@ pub fn render(result: &[DocItem], as_table: bool) {
         print_interface_table(result, "Output", BlockType::Output);
     } else {
         print_resources(result, "Resource", BlockType::Resource);
-        print_interface(result, "Inputs", BlockType::Variable);
-        print_interface(result, "Outputs", BlockType::Output);
+        print_interface(result, "Input", BlockType::Variable);
+        print_interface(result, "Output", BlockType::Output);
     }
 }
 

@@ -6,12 +6,19 @@
 //!
 //! Use the `-t` parameter to output the documentation in table format rather than list format.
 
+#![forbid(unsafe_code)]
+
+// use std::error::Error;
+
 use std::env;
 use std::io;
 use std::path::Path;
 
 use env_logger::Env;
 
+// Locally defined crates
+
+mod cli;
 mod parser;
 mod printer;
 mod types;
@@ -19,20 +26,19 @@ mod util;
 
 /// The main function responsible for actually carrying out the work.
 fn run_app() -> io::Result<()> {
-    // Look for the path or just use the current directory if none is given
-    let use_tables: bool;
-    let path_arg: String;
+    // Set up the command line. Ref https://docs.rs/clap for details.
+    let cli_args = cli::build_cli(env!("CARGO_PKG_VERSION")).get_matches();
 
     // If the -t parameter has been supplied, output the contents as tables
-    if env::args().len() > 1 && env::args().nth(1).unwrap_or_default() == *"-t" {
-        use_tables = true;
-        path_arg = env::args().nth(2).unwrap_or_else(|| String::from("./"));
-        log::debug!("Using tables. Path: {path_arg}");
-    } else {
-        use_tables = false;
-        path_arg = env::args().nth(1).unwrap_or_else(|| String::from("./"));
-        log::debug!("Using lists. Path: {path_arg}");
-    }
+    let use_tables = cli_args.get_flag("table");
+    log::debug!("Using tables: {use_tables}");
+
+    // Look for the path or just use the current directory if none is given
+    let path_arg = cli_args
+        .get_one::<String>("dirs")
+        .map(|s| s.as_str())
+        .unwrap_or(".");
+    log::debug!("path_arg = {path_arg}");
 
     // Find just the Terraform files
     let tf_files = util::list_tf_files(Path::new(&path_arg))?;
