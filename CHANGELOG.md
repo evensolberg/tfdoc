@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 ### FEAT
 
 - Moved from a crate to an app
+- Move the CLI to use Clap
 
 ### NEW
 
