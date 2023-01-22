@@ -11,6 +11,8 @@ application := "tfdoc"
 alias b := build
 alias br := buildr
 alias bra := buildra
+alias cl := changelog
+alias cliff := changelog
 alias fmt := format
 alias r := release
 alias update := upgrade
@@ -61,9 +63,6 @@ alias tp := testp
     -rm tests.txt > /dev/null 2>&1
     -rm tokei.txt > /dev/null 2>&1
     -rm {{application}}.log > /dev/null 2>&1
-
-# Rebuilds the changelog
-@cliff: changelog
 
 # Documents the project, lints it, builds and installs the release version, and cleans up
 @release: format changelog

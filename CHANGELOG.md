@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.4.0] - 2023-01-22
+## [0.4.1] - 2023-01-22
 
 ### CHORE
 
@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - Support for multiple directories
 - Include `data` types
 - Add filename to tables and lists
+- CSV export
 
 ### NEW
 
