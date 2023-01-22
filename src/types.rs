@@ -13,6 +13,9 @@ pub struct DocItem {
 
     /// The `#` comments and/or `description` fields associated with the entity
     pub description: Vec<String>,
+
+    /// The file in which the entity was found
+    pub filename: String,
 }
 
 impl DocItem {
@@ -30,6 +33,7 @@ impl Default for DocItem {
             category: BlockType::None,
             name: String::new(),
             description: vec![],
+            filename: String::new(),
         }
     }
 }

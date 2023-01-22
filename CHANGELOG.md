@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - Moved from a crate to an app
 - Move the CLI to use Clap
 - Support for multiple directories
+- Include `data` types
 
 ### NEW
 

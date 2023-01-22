@@ -4,6 +4,7 @@
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
+use std::path::Path;
 use std::path::PathBuf;
 
 use crate::types::{BlockType, DocItem};
@@ -18,12 +19,12 @@ enum Directive {
 ///
 /// # Errors
 ///  - Unable to parse the line
-pub fn parse_hcl(filename: PathBuf) -> std::io::Result<Vec<DocItem>> {
+pub fn parse_hcl(filename: &PathBuf) -> std::io::Result<Vec<DocItem>> {
     let mut result = vec![DocItem::new()];
 
     // Read the lines in the file and parse
     for line in BufReader::new(File::open(filename)?).lines() {
-        let state = parse_line(&line?, result.pop().unwrap_or_default());
+        let state = parse_line(filename, &line?, result.pop().unwrap_or_default());
         log::trace!("parse_hcl::state = {:?}", state);
         result.push(state.0);
         if state.1 == Directive::Stop {
@@ -50,7 +51,7 @@ pub fn parse_hcl(filename: PathBuf) -> std::io::Result<Vec<DocItem>> {
 }
 
 /// Parse an individual line and return the type of `DocItem` found and what to do next
-fn parse_line(line: &str, mut result: DocItem) -> (DocItem, Directive) {
+fn parse_line(filename: &Path, line: &str, mut result: DocItem) -> (DocItem, Directive) {
     match get_line_variant(line) {
         // Check what type of line it is
         BlockType::Resource => parse_regular(line, result, BlockType::Resource, &parse_resource),
@@ -76,6 +77,7 @@ fn parse_line(line: &str, mut result: DocItem) -> (DocItem, Directive) {
                     result.description.push(String::from(description));
                 }
             }
+            result.filename = String::from(filename.to_string_lossy());
             (result, Directive::Continue)
         }
     }

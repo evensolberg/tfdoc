@@ -39,14 +39,24 @@ fn print_resources(result: &[DocItem], name: &str, variant: BlockType, as_table:
                 println!("\n## {name}s\n");
             }
             if as_table {
-                println!("|{name}|Description|\n|-----|---------|");
+                println!("|Filename|{name}|Description|\n|-----|---------|");
             }
         }
 
         if as_table {
-            println!("|`{}`|{}|", item.name, item.description.join(" "));
+            println!(
+                "|{}|`{}`|{}|",
+                item.filename,
+                item.name,
+                item.description.join(" ")
+            );
         } else {
-            println!("* `{}`: {}", item.name, item.description.join(" "));
+            println!(
+                "* {} : `{}`: {}",
+                item.filename,
+                item.name,
+                item.description.join(" ")
+            );
         }
     }
 }
@@ -68,12 +78,10 @@ fn print_interfaces(result: &[DocItem], name: &str, variant: BlockType, as_table
             } else {
                 println!("|`{}`|{}|", item.name, item.description.join(" "));
             }
+        } else if item.description.is_empty() {
+            println!("* `{}`", item.name);
         } else {
-            if item.description.is_empty() {
-                println!("* `{}`", item.name);
-            } else {
-                println!("* `{}`: {}", item.name, item.description.join(" "));
-            }
+            println!("* `{}`: {}", item.name, item.description.join(" "));
         }
     }
 }

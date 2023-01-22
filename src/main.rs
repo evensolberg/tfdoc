@@ -54,7 +54,7 @@ fn run_app() -> io::Result<()> {
         // Process the terraform files
         for tf_file in &tf_files {
             all_tf_files.push(tf_file.clone());
-            result.append(&mut parser::parse_hcl(tf_file.clone())?);
+            result.append(&mut parser::parse_hcl(&tf_file.clone())?);
             log::debug!("main::result = {:?}", result);
         }
     }
