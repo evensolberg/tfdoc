@@ -27,4 +27,12 @@ pub fn build_cli(version: &'static str) -> Command {
                 .help("Output the results as a table (rather than a list).")
                 .action(clap::ArgAction::SetTrue)
         )
+        .arg( // export to CSV
+            Arg::new("csv")
+            .short('c')
+            .long("csv")
+            .help("Output to a CSV file with the name provided.")
+            .long_help("Output to a CSV file with the file name provided.")
+            .default_value("result.csv")
+        )
 }

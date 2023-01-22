@@ -19,6 +19,7 @@ use env_logger::Env;
 // Locally defined crates
 
 mod cli_builder;
+mod exporter;
 mod parser;
 mod printer;
 mod types;
@@ -62,6 +63,11 @@ fn run_app() -> io::Result<()> {
     // Output the resulting markdown
     printer::render(&result, use_tables);
     printer::print_files(&all_tf_files, use_tables);
+
+    if let Some(csv) = cli_args.get_one::<String>("csv") {
+        log::debug!("CSV = {csv}");
+        let _ = exporter::export_csv(csv, &result);
+    }
 
     // Return safely
     Ok(())
