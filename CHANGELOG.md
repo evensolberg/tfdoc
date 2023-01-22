@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [0.4.0] - 2023-01-22
 
 ### CHORE
 
@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 - Changelog Update
 - Changelog
 - Automation
+- Remove PR Lint Action
+- Action name change
 
 ### FEAT
 
@@ -19,6 +21,7 @@ All notable changes to this project will be documented in this file.
 - Move the CLI to use Clap
 - Support for multiple directories
 - Include `data` types
+- Add filename to tables and lists
 
 ### NEW
 
