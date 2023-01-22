@@ -89,7 +89,7 @@ fn print_interface_table(result: &[DocItem], name: &str, variant: BlockType) {
 }
 
 /// Outputs the file list either as a table or a list, depending on what's chosen
-pub fn print_files(files: &[PathBuf], table: bool) {
+pub fn print_files(files: &Vec<PathBuf>, table: bool) {
     println!("\n## Files\n");
     if table {
         println!("|File Name|Description|\n|-----|---------|");
