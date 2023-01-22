@@ -20,32 +20,6 @@ pub fn build_cli(version: &'static str) -> Command {
                 .default_value(".")
                 .num_args(0..)
         )
-        .arg( // Stop on error
-            Arg::new("stop-on-error")
-                .short('s')
-                .long("stop-on-error")
-                .help("Stop on error.")
-                .long_help("Stop on error. If this flag isn't set, the application will attempt to continue in case of error.")
-                // .takes_values(false)
-        )
-        .arg( // Dry-run
-            Arg::new("dry-run")
-                .short('r')
-                .long("dry-run")
-                .help("Iterate through the files and produce output without actually processing anything.")
-        )
-        .arg( // Print summary information
-            Arg::new("print-summary")
-                .short('p')
-                .long("print-summary")
-                .help("Print summary after all files are processed.")
-        )
-        .arg( // Don't export detail information
-            Arg::new("detail-off")
-                .short('o')
-                .long("detail-off")
-                .help("Don't display detailed information about each file processed.")
-        )
         .arg( // export as a table
             Arg::new("table")
                 .short('t')

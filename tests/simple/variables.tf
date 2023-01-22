@@ -26,5 +26,7 @@ output "name" {
   description = "and within outputs and variables"
 }
 
-# Data blocks are ignored
-data "aws_ami" "node" {}
+# Data blocks are not ignored
+data "aws_ami" "node" {
+  # Something something something
+}
