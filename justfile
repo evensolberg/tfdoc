@@ -126,7 +126,7 @@ alias tp := testp
 
 # Checks for potential code improvements
 @lint:
-    cargo lclippy -W clippy::pedantic -W clippy::nursery -W clippy::unwrap_used
+    cargo lclippy -- -W clippy::pedantic -W clippy::nursery -W clippy::unwrap_used
 
 # Checks for potential code improvements and fixes what it can
 @lintfix:

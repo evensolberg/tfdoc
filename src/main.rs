@@ -28,12 +28,21 @@ mod util;
 fn run_app() -> io::Result<()> {
     // Set up the command line. Ref https://docs.rs/clap for details.
     let cli_args = cli::build_cli(env!("CARGO_PKG_VERSION")).get_matches();
+    log::debug!("cli_args = {:?}", cli_args);
 
     // If the -t parameter has been supplied, output the contents as tables
     let use_tables = cli_args.get_flag("table");
     log::debug!("Using tables: {use_tables}");
 
     // Look for the path or just use the current directory if none is given
+    let paths: Vec<&str> = cli_args
+        .get_many::<String>("dirs")
+        .unwrap_or_default()
+        .map(|s| s.as_str())
+        .collect();
+
+    log::debug!("paths = {:?}", paths);
+
     let path_arg = cli_args
         .get_one::<String>("dirs")
         .map(|s| s.as_str())

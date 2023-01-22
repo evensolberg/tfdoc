@@ -5,7 +5,7 @@ use clap::{command, Arg, Command};
 pub fn build_cli(version: &'static str) -> Command {
     // This is the heading under which all the tags settings are grouped
     // run the app with `-h` to see.
-    let cmd = command!()
+    command!()
         .about("Generates documentation for Terraform modules and deployments.")
         .version(version)
         .author(clap::crate_authors!("\n"))
@@ -18,6 +18,7 @@ pub fn build_cli(version: &'static str) -> Command {
                 .long_help("One or more directories to process. Use the ** glob to recurse. Note: Case sensitive.")
                 .required(false)
                 .default_value(".")
+                .num_args(0..)
         )
         .arg( // Stop on error
             Arg::new("stop-on-error")
@@ -51,7 +52,5 @@ pub fn build_cli(version: &'static str) -> Command {
                 .long("table")
                 .help("Output the results as a table (rather than a list).")
                 .action(clap::ArgAction::SetTrue)
-        );
-    // return the cmd
-    cmd
+        )
 }
