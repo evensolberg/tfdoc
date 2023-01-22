@@ -54,6 +54,7 @@ fn parse_line(line: &str, mut result: DocItem) -> (DocItem, Directive) {
     match get_line_variant(line) {
         // Check what type of line it is
         BlockType::Resource => parse_regular(line, result, BlockType::Resource, &parse_resource),
+        BlockType::Data => parse_regular(line, result, BlockType::Data, &parse_resource),
         BlockType::Output => parse_regular(line, result, BlockType::Output, &parse_interface),
         BlockType::Variable => parse_regular(line, result, BlockType::Variable, &parse_interface),
         BlockType::Comment => (parse_comment(line, result), Directive::Continue),
@@ -67,7 +68,8 @@ fn parse_line(line: &str, mut result: DocItem) -> (DocItem, Directive) {
             // Parse description if relevant
             if (result.category == BlockType::Variable
                 || result.category == BlockType::Output
-                || result.category == BlockType::Resource)
+                || result.category == BlockType::Resource
+                || result.category == BlockType::Data)
                 && line.trim().starts_with("description")
             {
                 if let Some(description) = parse_description(line) {
@@ -83,6 +85,7 @@ fn parse_line(line: &str, mut result: DocItem) -> (DocItem, Directive) {
 fn get_line_variant(line: &str) -> BlockType {
     let variants = vec![
         ("resource ", BlockType::Resource),
+        ("data ", BlockType::Data),
         ("variable ", BlockType::Variable),
         ("output ", BlockType::Output),
         ("#", BlockType::Comment),

@@ -49,8 +49,9 @@ impl fmt::Display for DocItem {
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub enum BlockType {
     Comment,
-    Resource,
+    Data,
     Output,
-    Variable,
     None,
+    Resource,
+    Variable,
 }
