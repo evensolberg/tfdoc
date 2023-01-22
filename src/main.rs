@@ -18,7 +18,7 @@ use env_logger::Env;
 
 // Locally defined crates
 
-mod cli;
+mod cli_builder;
 mod parser;
 mod printer;
 mod types;
@@ -27,7 +27,7 @@ mod util;
 /// The main function responsible for actually carrying out the work.
 fn run_app() -> io::Result<()> {
     // Set up the command line. Ref https://docs.rs/clap for details.
-    let cli_args = cli::build_cli(env!("CARGO_PKG_VERSION")).get_matches();
+    let cli_args = cli_builder::build_cli(env!("CARGO_PKG_VERSION")).get_matches();
     log::debug!("cli_args = {:?}", cli_args);
 
     // If the -t parameter has been supplied, output the contents as tables
@@ -38,15 +38,14 @@ fn run_app() -> io::Result<()> {
     let paths: Vec<&str> = cli_args
         .get_many::<String>("dirs")
         .unwrap_or_default()
-        .map(|s| s.as_str())
+        .map(std::string::String::as_str)
         .collect();
 
     log::debug!("paths = {:?}", paths);
 
     let path_arg = cli_args
         .get_one::<String>("dirs")
-        .map(|s| s.as_str())
-        .unwrap_or(".");
+        .map_or(".", std::string::String::as_str);
     log::debug!("path_arg = {path_arg}");
 
     // Find just the Terraform files
