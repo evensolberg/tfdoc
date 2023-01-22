@@ -1,4 +1,4 @@
-name: Test GitHub Action
+name: Spell checker
 on: [pull_request]
 
 jobs:
