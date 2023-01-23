@@ -122,12 +122,12 @@ will be at the top of the Markdown file
 This also produces the `result.csv` file as follows:
 
 ```csv
-Filename,Type,Name,Description
-tests/simple/variables.tf,Variable,environment,"Variable descriptions will be parsed"
-tests/simple/variables.tf,Resource,aws_instance.this,"tfdoc keeps comments right on top of resource, variable and output blocks. All variables and outputs are kept. Only resources with comments on top are."
-tests/simple/variables.tf,Resource,aws_instance.no_comment_here,""
-tests/simple/variables.tf,Output,name,"We can have both comments on top and within outputs and variables"
-tests/simple/variables.tf,Data,aws_ami.node,"Data blocks are not ignored"
+Filename,Category,Type,Name,Description
+tests/simple/variables.tf,Variable,,environment,"Variable descriptions will be parsed"
+tests/simple/variables.tf,Resource,aws_instance,this,"tfdoc keeps comments right on top of resource, variable and output blocks. All variables and outputs are kept. Only resources with comments on top are."
+tests/simple/variables.tf,Resource,aws_instance,no_comment_here,""
+tests/simple/variables.tf,Output,,name,"We can have both comments on top and within outputs and variables"
+tests/simple/variables.tf,Data,aws_ami,node,"Data blocks are not ignored"
 ```
 
 This allows for easy import into other tools for query or filtering.
