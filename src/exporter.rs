@@ -12,20 +12,41 @@ pub fn export_csv(
 ) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
     let mut export_file = File::create(filename)?;
 
-    write!(export_file, "Filename,Type,Name,Description\n")?;
+    // Write the file header
+    write!(export_file, "Filename,Category,Type,Name,Description\n")?;
 
+
+    // Write each item
     for item in result {
         if item.category != BlockType::Comment {
+            log::trace!("item = {:?}", item);
+
+            // Some items have more than one description line,
+            // so we collect them into a single string
             let mut long_desc = String::new();
             for desc in &item.description {
                 long_desc = format!("{} {}", long_desc, desc);
                 long_desc = long_desc.trim().to_string();
             }
-            write!(
-                export_file,
-                "{},{},{},\"{}\"\n",
-                item.filename, item.category, item.name, long_desc
-            )?;
+
+            // Data and Resources we split into type and name
+            // TODO: Create separate items in the original struct and handle it properly
+            if item.category == BlockType::Data || item.category == BlockType::Resource {
+                let type_name: Vec<&str> = item.name.split(".").collect();
+                log::trace!("name_split = {:?}", type_name);
+                write!(
+                    export_file,
+                    "{},{},{},{},\"{}\"\n",
+                    item.filename, item.category, type_name[0], type_name[1], long_desc
+                )?;
+            } else { // Ignore the type
+                write!(
+                    export_file,
+                    "{},{},{},{},\"{}\"\n",
+                    item.filename, item.category, "", item.name, long_desc
+                )?;
+            }
+
         }
     }
 
