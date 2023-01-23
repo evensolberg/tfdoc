@@ -12,13 +12,18 @@ pub fn export_csv(
 ) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
     let mut export_file = File::create(filename)?;
 
+    // Write the file header
     write!(export_file, "Filename,Category,Type,Name,Description\n")?;
 
+
+    // Write each item
     for item in result {
         if item.category != BlockType::Comment {
             log::trace!("item = {:?}", item);
-            let mut long_desc = String::new();
 
+            // Some items have more than one description line,
+            // so we collect them into a single string
+            let mut long_desc = String::new();
             for desc in &item.description {
                 long_desc = format!("{} {}", long_desc, desc);
                 long_desc = long_desc.trim().to_string();
