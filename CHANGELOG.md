@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file.
 - Include `data` types
 - Add filename to tables and lists
 - CSV export
+- Markdown export, print summary
 
 ### NEW
 
