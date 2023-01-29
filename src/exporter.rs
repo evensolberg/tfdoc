@@ -16,8 +16,13 @@ pub fn export_csv(
 
     writeln!(ef, "Filename,Type,Name,Description")?;
 
+    // Write each item
     for item in result {
         if item.category != BlockType::Comment {
+            log::trace!("item = {:?}", item);
+
+            // Some items have more than one description line,
+            // so we collect them into a single string
             let mut long_desc = String::new();
             for desc in &item.description {
                 long_desc = format!("{} {}", long_desc, desc);
