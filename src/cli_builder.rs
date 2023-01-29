@@ -20,12 +20,23 @@ pub fn build_cli(version: &'static str) -> Command {
                 .default_value(".")
                 .num_args(0..)
         )
-        .arg( // export as a table
+        .arg( // export as lists
+            Arg::new("list")
+                .short('l')
+                .long("list")
+                .help("Output the results as lists in a Markdown file.")
+                .num_args(1)
+                .value_name("FILE")
+                .default_missing_value("tfdoc_summary_lists.md")
+        )
+        .arg( // export as tables
             Arg::new("table")
                 .short('t')
                 .long("table")
-                .help("Output the results as a table (rather than a list).")
-                .action(clap::ArgAction::SetTrue)
+                .help("Output the results as tables in a Markdown file.")
+                .num_args(1)
+                .value_name("FILE")
+                .default_missing_value("tfdoc_summary_tables.md")
         )
         .arg( // export to CSV
             Arg::new("csv")
@@ -33,5 +44,8 @@ pub fn build_cli(version: &'static str) -> Command {
             .long("csv")
             .help("Output to a CSV file with the name provided.")
             .long_help("Output to a CSV file with the file name provided.")
+            .num_args(1)
+            .value_name("FILE")
+            .default_missing_value("tfdoc_summary.csv")
         )
 }

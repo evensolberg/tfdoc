@@ -11,10 +11,11 @@
 // use std::error::Error;
 
 use std::env;
-use std::io;
 use std::path::Path;
 
 use env_logger::Env;
+
+use crate::printer::print_summary;
 
 // Locally defined crates
 
@@ -26,29 +27,25 @@ mod types;
 mod util;
 
 /// The main function responsible for actually carrying out the work.
-fn run_app() -> io::Result<()> {
+fn run_app() -> Result<(), Box<(dyn std::error::Error + 'static)>> {
     // Set up the command line. Ref https://docs.rs/clap for details.
     let cli_args = cli_builder::build_cli(env!("CARGO_PKG_VERSION")).get_matches();
     log::debug!("cli_args = {:?}", cli_args);
 
-    // If the -t parameter has been supplied, output the contents as tables
-    let use_tables = cli_args.get_flag("table");
-    log::debug!("Using tables: {use_tables}");
-
-    // Look for the path or just use the current directory if none is given
-    let paths: Vec<&str> = cli_args
+    // Look for the path(s) to process or just use the current directory if none is given
+    let process_paths: Vec<&str> = cli_args
         .get_many::<String>("dirs")
         .unwrap_or_default()
         .map(std::string::String::as_ref)
         .collect();
-    log::debug!("paths = {:?}", paths);
+    log::debug!("paths = {:?}", process_paths);
 
     // Parse the files found and put them into a list
     let mut result: Vec<types::DocItem> = vec![];
     let mut all_tf_files = vec![];
 
     // Iterate through the paths supplied
-    for path_arg in paths {
+    for path_arg in process_paths {
         // Find just the Terraform files
         let tf_files = util::list_tf_files(Path::new(&path_arg))?;
 
@@ -60,14 +57,25 @@ fn run_app() -> io::Result<()> {
         }
     }
 
-    // Output the resulting markdown
-    printer::render(&result, use_tables);
-    printer::print_files(&all_tf_files, use_tables);
-
-    if let Some(csv) = cli_args.get_one::<String>("csv") {
-        log::debug!("CSV = {csv}");
-        let _ = exporter::export_csv(csv, &result);
+    // Output the resulting markdown to file as a list
+    if let Some(md_list_filename) = cli_args.get_one::<String>("list") {
+        // printer::print_markdown(&all_tf_files, &result, use_tables);
+        exporter::export_markdown(md_list_filename, &all_tf_files, &result, false)?;
     }
+
+    // Output the resulting markdown to file as a table
+    if let Some(md_table_filename) = cli_args.get_one::<String>("table") {
+        // printer::print_markdown(&all_tf_files, &result, use_tables);
+        exporter::export_markdown(md_table_filename, &all_tf_files, &result, true)?;
+    }
+
+    // Export to CSV if filename is given
+    if let Some(csv_filename) = cli_args.get_one::<String>("csv") {
+        log::debug!("CSV = {csv_filename}");
+        let _ = exporter::export_csv(csv_filename, &result);
+    }
+
+    print_summary(&all_tf_files, &result);
 
     // Return safely
     Ok(())

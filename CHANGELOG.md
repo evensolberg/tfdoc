@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.4.1] - 2023-01-22
+## [unreleased]
 
 ### CHORE
 
@@ -14,6 +14,10 @@ All notable changes to this project will be documented in this file.
 - Automation
 - Remove PR Lint Action
 - Action name change
+
+### DOC
+
+- Readme update
 
 ### FEAT
 
