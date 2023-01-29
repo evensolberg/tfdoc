@@ -21,116 +21,28 @@ The resulting binary can be found in `target/release/` and can be moved to somew
 ## Usage
 
 ```sh
-tfdoc <DIR(S)> [OPTIONS]
+$ tfdoc <DIR(S)> [OPTIONS]
 
 Arguments:
   [DIR(S)]...  One or more directories to process. [default: .]
 
 Options:
-  -t, --table      Output the results as a table (rather than a list).
-  -c, --csv <csv>  Output to a CSV file with the name provided.
-  -h, --help       Print help (see more with '--help')
-  -V, --version    Print version
+  -l, --list [<FILE>]   Output the results as lists in a Markdown file. Default file name: tfdoc_summary_lists.md
+  -t, --table [<FILE>]  Output the results as tables in a Markdown file. Default file name: tfdoc_summary_tables.md
+  -c, --csv [<FILE>]    Output to a CSV file with the name provided. Default file name: tfdoc_summary.csv
+  -h, --help            Print help (see more with '--help')
+  -V, --version         Print version
 ```
 
-You can specify more than one directory thusly: `tfdoc dir1/ dir2/ dir3/`. Depending on your operating system, you can also use the `**` glob: `tfdoc modules/**`.
+You can specify more than one directory thusly: `tfdoc dir1/ dir2/ dir3/`. Depending on your operating system, you can also use the `**` glob [^1]: `tfdoc modules/**`.
 
 |Option|Description|
 |------|-----------|
-|`-t`, `--table`|Outputs the results as a set of markdown tables instead of lists|
-|`-c <csv_filenaame>`, `--csv <csv_filename>`|Output there results as a CSV file. Example: `--csv my_module.csv`|
+|`-c <csv_filenaame>`, `--csv <csv_filename>`|Export the results as a CSV file. Example: `--csv my_module.csv`|
+|`-l <list_filename>`, `--table <list_filename>`|Export the results as a set of markdown lists into the file supplied. Default file name if none is supplied is `tfdoc_summary_lists.md`|
+|`-t <table_filename>`, `--table <table_filename>`|Export the results as a set of markdown tables into the file supplied. Default file name if none is supplied is `tfdoc_summary_tables.md`|
 |`-h`, `--help`|Prints help in short form with `-h` and long form with `--help`|
 |`-V`, `--version`|Prints version information|
-
-### Examples
-
-#### List
-
-```sh
-$ tfdoc tests/simmple/
-
-# The name of the module
-
-Top comment prefixed by "Title: " and the following lines
-will be at the top of the Markdown file
-
-## Resources
-
-* tests/simple/variables.tf : `aws_instance.this`: tfdoc keeps comments right on top of resource, variable and output blocks. All variables and outputs are kept. Only resources with comments on top are.
-* tests/simple/variables.tf : `aws_instance.no_comment_here`:
-
-## Data
-
-* tests/simple/variables.tf : `aws_ami.node`: Data blocks are not ignored
-
-## Inputs
-
-* `environment`: Variable descriptions will be parsed
-
-## Outputs
-
-* `name`: We can have both comments on top and within outputs and variables
-
-## Files
-
-* `tests/simple/variables.tf`
-```
-
-#### Tables with CSV
-
-```sh
-$ tfdoc tests/simple -t -c result.csv
-
-# The name of the module
-
-Top comment prefixed by "Title: " and the following lines
-will be at the top of the Markdown file
-
-## Resources
-
-|Filename|Resource|Description|
-|-----|---------|
-|tests/simple/variables.tf|`aws_instance.this`|tfdoc keeps comments right on top of resource, variable and output blocks. All variables and outputs are kept. Only resources with comments on top are.|
-|tests/simple/variables.tf|`aws_instance.no_comment_here`||
-
-## Data
-
-|Filename|Data|Description|
-|-----|---------|
-|tests/simple/variables.tf|`aws_ami.node`|Data blocks are not ignored|
-
-## Inputs
-
-|Input|Description|
-|-----|---------|
-|`environment`|Variable descriptions will be parsed|
-
-## Outputs
-
-|Output|Description|
-|-----|---------|
-|`name`|We can have both comments on top and within outputs and variables|
-
-## Files
-
-|File Name|Description|
-|-----|---------|
-|`tests/simple/variables.tf`||
-
-```
-
-This also produces the `result.csv` file as follows:
-
-```csv
-Filename,Category,Type,Name,Description
-tests/simple/variables.tf,Variable,,environment,"Variable descriptions will be parsed"
-tests/simple/variables.tf,Resource,aws_instance,this,"tfdoc keeps comments right on top of resource, variable and output blocks. All variables and outputs are kept. Only resources with comments on top are."
-tests/simple/variables.tf,Resource,aws_instance,no_comment_here,""
-tests/simple/variables.tf,Output,,name,"We can have both comments on top and within outputs and variables"
-tests/simple/variables.tf,Data,aws_ami,node,"Data blocks are not ignored"
-```
-
-This allows for easy import into other tools for query or filtering.
 
 ## Troubleshooting
 
@@ -146,3 +58,7 @@ Starting the application with the environment variable specified can be done lik
 ## Acknowledgements
 
 - This builds on the original [`tfdoc`](https://github.com/maur1th/tfdoc) by [Thomas Maurin](https://github.com/maur1th)
+
+## Footnotes
+
+[^1]: You may need to use `setopt EXTENDED_GLOB` in order to enable extended globbing, depending on your shell.

@@ -1,7 +1,9 @@
 //! Implements exporters
 
-use std::fs::File;
+use std::fs::OpenOptions;
 use std::io::Write;
+use std::path::Path;
+use std::{fs::File, path::PathBuf};
 
 use crate::types::{BlockType, DocItem};
 
@@ -10,11 +12,9 @@ pub fn export_csv(
     filename: &str,
     result: &[DocItem],
 ) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
-    let mut export_file = File::create(filename)?;
+    let mut ef = File::create(filename)?;
 
-    // Write the file header
-    write!(export_file, "Filename,Category,Type,Name,Description\n")?;
-
+    writeln!(ef, "Filename,Type,Name,Description")?;
 
     // Write each item
     for item in result {
@@ -35,18 +35,185 @@ pub fn export_csv(
                 let type_name: Vec<&str> = item.name.split(".").collect();
                 log::trace!("name_split = {:?}", type_name);
                 write!(
-                    export_file,
+                    ef,
                     "{},{},{},{},\"{}\"\n",
                     item.filename, item.category, type_name[0], type_name[1], long_desc
                 )?;
-            } else { // Ignore the type
+            } else {
+                // Ignore the type
                 write!(
-                    export_file,
+                    ef,
                     "{},{},{},{},\"{}\"\n",
                     item.filename, item.category, "", item.name, long_desc
                 )?;
             }
+        }
+    }
 
+    Ok(())
+}
+
+/// Exports the results to a markdown file
+pub fn export_markdown(
+    md_file: &str,
+    file_list: &Vec<PathBuf>,
+    result: &[DocItem],
+    as_table: bool,
+) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
+    // Create the file
+    let _ = File::create(Path::new(&md_file))?;
+
+    // Print the H1 Title: block
+    for item in result.iter().filter(|i| i.category == BlockType::Comment) {
+        export_title_block(md_file, &item.description)?;
+    }
+
+    log::trace!("result = {:?}", result);
+
+    // Print the H2 Blocks
+    export_resources(md_file, result, "Resource", BlockType::Resource, as_table)?;
+    export_resources(md_file, result, "Data", BlockType::Data, as_table)?;
+    export_interfaces(md_file, result, "Input", BlockType::Variable, as_table)?;
+    export_interfaces(md_file, result, "Output", BlockType::Output, as_table)?;
+
+    export_file_list(md_file, file_list, as_table)?;
+
+    Ok(())
+}
+
+/// Exports the H1 title block to Markdown
+fn export_title_block(
+    filename: &str,
+    description: &[String],
+) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
+    let mut ef = OpenOptions::new()
+        .write(true)
+        .append(true)
+        .open(Path::new(filename))?;
+
+    let blank_string = String::new();
+    let title = &description.first().unwrap_or(&blank_string)["Title: ".len()..];
+    writeln!(ef, "# {title}\n")?;
+
+    for line in description.iter().skip(1) {
+        writeln!(ef, "{line}")?;
+    }
+
+    Ok(())
+}
+
+/// Export resources to a Markdown file
+fn export_resources(
+    filename: &str,
+    result: &[DocItem],
+    name: &str,
+    variant: BlockType,
+    as_table: bool,
+) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
+    let mut ef = OpenOptions::new()
+        .write(true)
+        .append(true)
+        .open(Path::new(filename))?;
+
+    log::debug!("export_resources::result = {:?}", result);
+    for (index, item) in result.iter().filter(|i| i.category == variant).enumerate() {
+        if index == 0 {
+            if variant == BlockType::Data {
+                writeln!(ef, "\n## {name}\n")?;
+            } else {
+                writeln!(ef, "\n## {name}s\n")?;
+            }
+
+            if as_table {
+                writeln!(ef, "|Filename|{name}|Description|")?;
+                writeln!(ef, "|-----|---------|")?;
+            }
+        }
+
+        if as_table {
+            writeln!(
+                ef,
+                "|{}|`{}`|{}|",
+                item.filename,
+                item.name,
+                item.description.join(" ")
+            )?;
+        } else {
+            writeln!(
+                ef,
+                "* {} : `{}`: {}",
+                item.filename,
+                item.name,
+                item.description.join(" ")
+            )?;
+        }
+    }
+
+    Ok(())
+}
+
+/// Exports the interfaces (ie. the `variable` and `output` sections) to Markdown
+fn export_interfaces(
+    filename: &str,
+    result: &[DocItem],
+    name: &str,
+    variant: BlockType,
+    as_table: bool,
+) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
+    let mut ef = OpenOptions::new()
+        .write(true)
+        .append(true)
+        .open(Path::new(filename))?;
+
+    for (index, item) in result.iter().filter(|i| i.category == variant).enumerate() {
+        if index == 0 {
+            writeln!(ef, "\n## {name}s\n")?;
+
+            if as_table {
+                writeln!(ef, "|{name}|Description|")?;
+                writeln!(ef, "|-----|---------|")?;
+            }
+        }
+
+        // print the main body
+        if as_table {
+            if item.description.is_empty() {
+                writeln!(ef, "|`{}`||", item.name)?;
+            } else {
+                writeln!(ef, "|`{}`|{}|", item.name, item.description.join(" "))?;
+            }
+        } else if item.description.is_empty() {
+            writeln!(ef, "* `{}`", item.name)?;
+        } else {
+            writeln!(ef, "* `{}`: {}", item.name, item.description.join(" "))?;
+        }
+    }
+
+    Ok(())
+}
+
+/// Exports the file list
+fn export_file_list(
+    filename: &str,
+    file_list: &Vec<PathBuf>,
+    table: bool,
+) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
+    let mut ef = OpenOptions::new()
+        .write(true)
+        .append(true)
+        .open(Path::new(filename))?;
+
+    writeln!(ef, "\n## Files\n")?;
+    if table {
+        writeln!(ef, "|File Name|Description|")?;
+        writeln!(ef, "|-----|---------|")?;
+    }
+
+    for file in file_list {
+        if table {
+            writeln!(ef, "|`{}`||", &file.to_str().unwrap_or("Unknown"))?;
+        } else {
+            writeln!(ef, "* `{}`", &file.to_str().unwrap_or("Unknown"))?;
         }
     }
 
