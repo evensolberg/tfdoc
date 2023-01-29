@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [0.5.0] - 2023-01-29
 
 ### CHORE
 
@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 ### DOC
 
 - Readme update
+- Update README
 
 ### FEAT
 
@@ -28,6 +29,7 @@ All notable changes to this project will be documented in this file.
 - Add filename to tables and lists
 - CSV export
 - Markdown export, print summary
+- Export to default file names
 
 ### NEW
 
