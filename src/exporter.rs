@@ -23,11 +23,25 @@ pub fn export_csv(
                 long_desc = format!("{} {}", long_desc, desc);
                 long_desc = long_desc.trim().to_string();
             }
-            writeln!(
-                ef,
-                "{},{},{},\"{}\"",
-                item.filename, item.category, item.name, long_desc
-            )?;
+
+            // Data and Resources we split into type and name
+            // TODO: Create separate items in the original struct and handle it properly
+            if item.category == BlockType::Data || item.category == BlockType::Resource {
+                let type_name: Vec<&str> = item.name.split(".").collect();
+                log::trace!("name_split = {:?}", type_name);
+                write!(
+                    ef,
+                    "{},{},{},{},\"{}\"\n",
+                    item.filename, item.category, type_name[0], type_name[1], long_desc
+                )?;
+            } else {
+                // Ignore the type
+                write!(
+                    ef,
+                    "{},{},{},{},\"{}\"\n",
+                    item.filename, item.category, "", item.name, long_desc
+                )?;
+            }
         }
     }
 
