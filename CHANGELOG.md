@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.2] - 2023-01-30
+
+### FEAT
+
+- Print filenames as we go
+
 ## [0.5.1] - 2023-01-29
 
 ### CHORE
@@ -14,12 +20,15 @@ All notable changes to this project will be documented in this file.
 - Automation
 - Remove PR Lint Action
 - Action name change
+- Add comments
 
 ### DOC
 
 - Readme update
+- README update
 - Update README
 - Update Changelog
+- Changelog Update
 
 ### FEAT
 
@@ -29,8 +38,9 @@ All notable changes to this project will be documented in this file.
 - Include `data` types
 - Add filename to tables and lists
 - CSV export
+- Better CSV export
 - Markdown export, print summary
-- Export to default file names
+- Export to gitdefault file names
 
 ### FIX
 
