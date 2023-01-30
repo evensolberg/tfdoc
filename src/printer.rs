@@ -25,8 +25,8 @@ pub fn print_summary(file_list: &Vec<PathBuf>, result: &[DocItem]) {
         }
     }
 
-    println!("Data items:           {:5}", data);
-    println!("Outputs:              {:5}", outputs);
-    println!("Resources:            {:5}", resources);
-    println!("Variables:            {:5}", variables);
+    println!("Data items:           {data:5}");
+    println!("Outputs:              {outputs:5}");
+    println!("Resources:            {resources:5}");
+    println!("Variables:            {variables:5}");
 }
