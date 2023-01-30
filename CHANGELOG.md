@@ -2,7 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.3] - 2023-01-30
+
+### CHORE
+
+- Version bump
+
+### REFACTOR
+
+- Pedantic lint fixes
+
 ## [0.5.2] - 2023-01-30
+
+### DOC
+
+- Update Changelog
 
 ### FEAT
 
@@ -40,7 +54,7 @@ All notable changes to this project will be documented in this file.
 - CSV export
 - Better CSV export
 - Markdown export, print summary
-- Export to gitdefault file names
+- Export to default file names
 
 ### FIX
 
