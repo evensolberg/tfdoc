@@ -54,6 +54,8 @@ fn run_app() -> Result<(), Box<(dyn std::error::Error + 'static)>> {
             all_tf_files.push(tf_file.clone());
             result.append(&mut parser::parse_hcl(&tf_file.clone())?);
             log::debug!("main::result = {:?}", result);
+            let tff = tf_file.to_str().unwrap_or("Unknown");
+            println!("{tff}");
         }
     }
 
@@ -75,6 +77,7 @@ fn run_app() -> Result<(), Box<(dyn std::error::Error + 'static)>> {
         let _ = exporter::export_csv(csv_filename, &result);
     }
 
+    println!("---");
     print_summary(&all_tf_files, &result);
 
     // Return safely
