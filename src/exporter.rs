@@ -32,19 +32,19 @@ pub fn export_csv(
             // Data and Resources we split into type and name
             // TODO: Create separate items in the original struct and handle it properly
             if item.category == BlockType::Data || item.category == BlockType::Resource {
-                let type_name: Vec<&str> = item.name.split(".").collect();
+                let type_name: Vec<&str> = item.name.split('.').collect();
                 log::trace!("name_split = {:?}", type_name);
-                write!(
+                writeln!(
                     ef,
-                    "{},{},{},{},\"{}\"\n",
+                    "{},{},{},{},\"{}\"",
                     item.filename, item.category, type_name[0], type_name[1], long_desc
                 )?;
             } else {
                 // Ignore the type
-                write!(
+                writeln!(
                     ef,
-                    "{},{},{},{},\"{}\"\n",
-                    item.filename, item.category, "", item.name, long_desc
+                    "{},{},,{},\"{}\"",
+                    item.filename, item.category, item.name, long_desc
                 )?;
             }
         }
