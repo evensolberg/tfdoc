@@ -63,13 +63,13 @@ pub enum BlockType {
 impl fmt::Display for BlockType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let t = match self {
-            BlockType::Comment => "Comment",
-            BlockType::Data => "Data",
-            BlockType::Output => "Output",
-            BlockType::None => "None",
-            BlockType::Resource => "Resource",
-            BlockType::Variable => "Variable",
+            Self::Comment => "Comment",
+            Self::Data => "Data",
+            Self::Output => "Output",
+            Self::None => "None",
+            Self::Resource => "Resource",
+            Self::Variable => "Variable",
         };
-        write!(f, "{}", t)
+        write!(f, "{t}")
     }
 }

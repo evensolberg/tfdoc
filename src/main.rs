@@ -74,7 +74,7 @@ fn run_app() -> Result<(), Box<(dyn std::error::Error + 'static)>> {
     // Export to CSV if filename is given
     if let Some(csv_filename) = cli_args.get_one::<String>("csv") {
         log::debug!("CSV = {csv_filename}");
-        let _ = exporter::export_csv(csv_filename, &result);
+        let _exp = exporter::export_csv(csv_filename, &result);
     }
 
     println!("---");

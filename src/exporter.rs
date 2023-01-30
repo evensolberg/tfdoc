@@ -25,26 +25,26 @@ pub fn export_csv(
             // so we collect them into a single string
             let mut long_desc = String::new();
             for desc in &item.description {
-                long_desc = format!("{} {}", long_desc, desc);
+                long_desc = format!("{long_desc} {desc}");
                 long_desc = long_desc.trim().to_string();
             }
 
             // Data and Resources we split into type and name
             // TODO: Create separate items in the original struct and handle it properly
             if item.category == BlockType::Data || item.category == BlockType::Resource {
-                let type_name: Vec<&str> = item.name.split(".").collect();
+                let type_name: Vec<&str> = item.name.split('.').collect();
                 log::trace!("name_split = {:?}", type_name);
-                write!(
+                writeln!(
                     ef,
-                    "{},{},{},{},\"{}\"\n",
-                    item.filename, item.category, type_name[0], type_name[1], long_desc
+                    "{},{},{},{},\"{long_desc}\"",
+                    item.filename, item.category, type_name[0], type_name[1]
                 )?;
             } else {
                 // Ignore the type
-                write!(
+                writeln!(
                     ef,
-                    "{},{},{},{},\"{}\"\n",
-                    item.filename, item.category, "", item.name, long_desc
+                    "{},{},,{},\"{long_desc}\"",
+                    item.filename, item.category, item.name
                 )?;
             }
         }
@@ -61,7 +61,7 @@ pub fn export_markdown(
     as_table: bool,
 ) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
     // Create the file
-    let _ = File::create(Path::new(&md_file))?;
+    let _f = File::create(Path::new(&md_file))?;
 
     // Print the H1 Title: block
     for item in result.iter().filter(|i| i.category == BlockType::Comment) {
