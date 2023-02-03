@@ -2,7 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.5.2] - 2023-01-30
+## [unreleased]
+
+### DOC
+
+- Update Changelog
 
 ### FEAT
 
@@ -40,7 +44,7 @@ All notable changes to this project will be documented in this file.
 - CSV export
 - Better CSV export
 - Markdown export, print summary
-- Export to gitdefault file names
+- Export to default file names
 
 ### FIX
 
