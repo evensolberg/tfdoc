@@ -14,7 +14,7 @@ pub fn export_csv(
 ) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
     let mut ef = File::create(filename)?;
 
-    writeln!(ef, "Filename,Type,Name,Description")?;
+    writeln!(ef, "Filename,Category,Type,Name,Description")?;
 
     // Write each item
     for item in result {
