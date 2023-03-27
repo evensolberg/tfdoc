@@ -18,6 +18,8 @@ cargo build --release
 
 The resulting binary can be found in `target/release/` and can be moved to somewhere in your path, for example `/usr/local/bin`
 
+The Releases section of this repository also contains binary builds for various platforms.
+
 ## Usage
 
 ```sh
