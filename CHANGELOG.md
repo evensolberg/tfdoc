@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### Build
+
+- Bump clap from 4.1.1 to 4.1.4
+- Bump clap from 4.1.4 to 4.1.11
+
+### CHORE
+
+- Release automation
+- Merge main
+
+## [0.5.3] - 2023-01-30
+
+### CHORE
+
+- Version bump
+- Changelog update
+
+### REFACTOR
+
+- Pedantic lint fixes
+
+## [0.5.2] - 2023-01-30
+
 ### DOC
 
 - Update Changelog
