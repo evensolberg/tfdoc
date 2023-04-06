@@ -2,4 +2,3 @@
 **/*.rs.bk
 app/*
 Cargo.lock
-Cargo.lock
