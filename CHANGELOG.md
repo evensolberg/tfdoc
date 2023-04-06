@@ -4,6 +4,43 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### Features
+
+- Add support for globbing
+
+## [0.6.1] - 2023-04-06
+
+### Features
+
+- Glob support for parameters
+
+## [0.6.0] - 2023-04-03
+
+## [0.5.5] - 2023-04-03
+
+### Build
+
+- Bump clap from 4.1.11 to 4.1.13
+- Bump clap from 4.1.13 to 4.2.1
+
+### Chore
+
+- Remove rust.yml since we have release.yml
+
+### Miscellaneous Tasks
+
+- Bump the version
+
+### Test
+
+- Add Github actions to compile and test the code
+
+## [0.5.4] - 2023-03-21
+
+### Bug Fixes
+
+- Missing category in CSV export header
+
 ### Build
 
 - Bump clap from 4.1.1 to 4.1.4
@@ -11,15 +48,19 @@ All notable changes to this project will be documented in this file.
 
 ### CHORE
 
+- Changelog update
 - Release automation
 - Merge main
+
+### Miscellaneous Tasks
+
+- Patch version bump
 
 ## [0.5.3] - 2023-01-30
 
 ### CHORE
 
 - Version bump
-- Changelog update
 
 ### REFACTOR
 
