@@ -8,12 +8,10 @@
 
 #![forbid(unsafe_code)]
 
-// use std::error::Error;
-
 use std::env;
-use std::path::Path;
 
 use env_logger::Env;
+use glob::glob;
 
 use crate::printer::print_summary;
 
@@ -46,16 +44,24 @@ fn run_app() -> Result<(), Box<(dyn std::error::Error + 'static)>> {
 
     // Iterate through the paths supplied
     for path_arg in process_paths {
-        // Find just the Terraform files
-        let tf_files = util::list_tf_files(Path::new(&path_arg))?;
+        for path_res in glob(path_arg).expect("Unable to parse paths. Exiting.") {
+            let Ok(current_path) = path_res else {
+                let err = format!("Unable to parse {path_res:?}.");
+                return Err(err.into())
+            };
+            log::debug!("Current path = {current_path:?}");
 
-        // Process the terraform files
-        for tf_file in &tf_files {
-            all_tf_files.push(tf_file.clone());
-            result.append(&mut parser::parse_hcl(&tf_file.clone())?);
-            log::debug!("main::result = {:?}", result);
-            let tff = tf_file.to_str().unwrap_or("Unknown");
-            println!("{tff}");
+            // Find just the Terraform files
+            let tf_files = util::list_tf_files(&current_path)?;
+
+            // Process the terraform files
+            for tf_file in &tf_files {
+                all_tf_files.push(tf_file.clone());
+                result.append(&mut parser::parse_hcl(&tf_file.clone())?);
+                log::debug!("main::result = {:?}", result);
+                let tff = tf_file.to_str().unwrap_or("Unknown");
+                println!("{tff}");
+            }
         }
     }
 
@@ -100,3 +106,4 @@ fn main() {
         }
     });
 }
+
