@@ -12,6 +12,7 @@ use std::env;
 
 use env_logger::Env;
 use glob::glob;
+use shellexpand;
 
 use crate::printer::print_summary;
 
@@ -36,7 +37,6 @@ fn run_app() -> Result<(), Box<(dyn std::error::Error + 'static)>> {
         .unwrap_or_default()
         .map(std::string::String::as_ref)
         .collect();
-    log::debug!("paths = {:?}", process_paths);
 
     // Parse the files found and put them into a list
     let mut result: Vec<types::DocItem> = vec![];
@@ -44,12 +44,14 @@ fn run_app() -> Result<(), Box<(dyn std::error::Error + 'static)>> {
 
     // Iterate through the paths supplied
     for path_arg in process_paths {
-        for path_res in glob(path_arg).expect("Unable to parse paths. Exiting.") {
+        let exp_path = shellexpand::full(path_arg)?;
+        let paths = glob(&exp_path)?;
+
+        for path_res in paths {
             let Ok(current_path) = path_res else {
                 let err = format!("Unable to parse {path_res:?}.");
                 return Err(err.into())
             };
-            log::debug!("Current path = {current_path:?}");
 
             // Find just the Terraform files
             let tf_files = util::list_tf_files(&current_path)?;
@@ -58,7 +60,6 @@ fn run_app() -> Result<(), Box<(dyn std::error::Error + 'static)>> {
             for tf_file in &tf_files {
                 all_tf_files.push(tf_file.clone());
                 result.append(&mut parser::parse_hcl(&tf_file.clone())?);
-                log::debug!("main::result = {:?}", result);
                 let tff = tf_file.to_str().unwrap_or("Unknown");
                 println!("{tff}");
             }
@@ -67,19 +68,16 @@ fn run_app() -> Result<(), Box<(dyn std::error::Error + 'static)>> {
 
     // Output the resulting markdown to file as a list
     if let Some(md_list_filename) = cli_args.get_one::<String>("list") {
-        // printer::print_markdown(&all_tf_files, &result, use_tables);
         exporter::export_markdown(md_list_filename, &all_tf_files, &result, false)?;
     }
 
     // Output the resulting markdown to file as a table
     if let Some(md_table_filename) = cli_args.get_one::<String>("table") {
-        // printer::print_markdown(&all_tf_files, &result, use_tables);
         exporter::export_markdown(md_table_filename, &all_tf_files, &result, true)?;
     }
 
     // Export to CSV if filename is given
     if let Some(csv_filename) = cli_args.get_one::<String>("csv") {
-        log::debug!("CSV = {csv_filename}");
         let _exp = exporter::export_csv(csv_filename, &result);
     }
 
@@ -106,4 +104,3 @@ fn main() {
         }
     });
 }
-
