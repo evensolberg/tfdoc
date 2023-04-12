@@ -1,5 +1,5 @@
 //! Contains a single function to build the main CLI for the `tfdoc` program.
-use clap::{command, Arg, Command};
+use clap::{command, Arg, ArgAction, Command};
 
 /// Builds the CLI so the main file doesn't get cluttered. Note that the `<'static>` means it returns a global variable.
 pub fn build_cli(version: &'static str) -> Command {
@@ -19,6 +19,7 @@ pub fn build_cli(version: &'static str) -> Command {
                 .required(false)
                 .default_value(".")
                 .num_args(0..)
+                .action(ArgAction::Append)
         )
         .arg( // export as lists
             Arg::new("list")
@@ -28,6 +29,7 @@ pub fn build_cli(version: &'static str) -> Command {
                 .num_args(..=1)
                 .value_name("FILE")
                 .default_missing_value("tfdoc_summary_lists.md")
+                .action(ArgAction::Set)
         )
         .arg( // export as tables
             Arg::new("table")
@@ -37,6 +39,7 @@ pub fn build_cli(version: &'static str) -> Command {
                 .num_args(..=1)
                 .value_name("FILE")
                 .default_missing_value("tfdoc_summary_tables.md")
+                .action(ArgAction::Set)
         )
         .arg( // export to CSV
             Arg::new("csv")
@@ -47,5 +50,15 @@ pub fn build_cli(version: &'static str) -> Command {
             .num_args(..=1)
             .value_name("FILE")
             .default_missing_value("tfdoc_summary.csv")
+            .action(ArgAction::Set)
+        )
+        .arg( // QUiet - don't produce output
+            Arg::new("quiet")
+            .short('q')
+            .long("quiet")
+            .help("Suppress output and sliently proceess inputs")
+            .long_help("Does not produce any output other than error messages if something goes wrong.")
+            .num_args(0)
+            .action(ArgAction::SetTrue)
         )
 }
