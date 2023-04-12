@@ -32,6 +32,7 @@ Options:
   -l, --list [<FILE>]   Output the results as lists in a Markdown file. Default file name: tfdoc_summary_lists.md
   -t, --table [<FILE>]  Output the results as tables in a Markdown file. Default file name: tfdoc_summary_tables.md
   -c, --csv [<FILE>]    Output to a CSV file with the name provided. Default file name: tfdoc_summary.csv
+  -q, --quiet           Suppress output and sliently proceess inputs
   -h, --help            Print help (see more with '--help')
   -V, --version         Print version
 ```
@@ -43,6 +44,7 @@ You can specify more than one directory thusly: `tfdoc dir1/ dir2/ dir3/`. Depen
 |`-c <csv_filenaame>`, `--csv <csv_filename>`|Export the results as a CSV file. Example: `--csv my_module.csv`|
 |`-l <list_filename>`, `--table <list_filename>`|Export the results as a set of markdown lists into the file supplied. Default file name if none is supplied is `tfdoc_summary_lists.md`|
 |`-t <table_filename>`, `--table <table_filename>`|Export the results as a set of markdown tables into the file supplied. Default file name if none is supplied is `tfdoc_summary_tables.md`|
+|`-q`, `--quiet`|Do not produce any output other than error messages if something goes wrong.|
 |`-h`, `--help`|Prints help in short form with `-h` and long form with `--help`|
 |`-V`, `--version`|Prints version information|
 
