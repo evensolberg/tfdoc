@@ -10,6 +10,7 @@
 
 use std::env;
 
+use clap::parser::ValueSource;
 use env_logger::Env;
 use glob::glob;
 use shellexpand;
@@ -38,6 +39,13 @@ fn run_app() -> Result<(), Box<(dyn std::error::Error + 'static)>> {
         .map(std::string::String::as_ref)
         .collect();
 
+    // Determine whether to process quietly or not
+    let quiet = if cli_args.value_source("quiet") == Some(ValueSource::CommandLine) {
+        true
+    } else {
+        false
+    };
+
     // Parse the files found and put them into a list
     let mut result: Vec<types::DocItem> = vec![];
     let mut all_tf_files = vec![];
@@ -61,7 +69,9 @@ fn run_app() -> Result<(), Box<(dyn std::error::Error + 'static)>> {
                 all_tf_files.push(tf_file.clone());
                 result.append(&mut parser::parse_hcl(&tf_file.clone())?);
                 let tff = tf_file.to_str().unwrap_or("Unknown");
-                println!("{tff}");
+                if !quiet {
+                    println!("{tff}");
+                }
             }
         }
     }
@@ -81,8 +91,10 @@ fn run_app() -> Result<(), Box<(dyn std::error::Error + 'static)>> {
         let _exp = exporter::export_csv(csv_filename, &result);
     }
 
-    println!("---");
-    print_summary(&all_tf_files, &result);
+    if !quiet {
+        println!("---");
+        print_summary(&all_tf_files, &result);
+    }
 
     // Return safely
     Ok(())
