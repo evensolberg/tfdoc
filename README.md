@@ -32,7 +32,7 @@ Options:
   -l, --list [<FILE>]   Output the results as lists in a Markdown file. Default file name: tfdoc_summary_lists.md
   -t, --table [<FILE>]  Output the results as tables in a Markdown file. Default file name: tfdoc_summary_tables.md
   -c, --csv [<FILE>]    Output to a CSV file with the name provided. Default file name: tfdoc_summary.csv
-  -q, --quiet           Suppress output and sliently proceess inputs
+  -q, --quiet           Suppress output and silently proceess inputs
   -h, --help            Print help (see more with '--help')
   -V, --version         Print version
 ```
