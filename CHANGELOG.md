@@ -2,19 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.7.0] - 2023-04-06
+## [unreleased]
+
+## [0.7.0] - 2023-04-12
 
 ### Features
 
-- Add support for globbing
+- Allow for silent processing
 
 ## [0.6.1] - 2023-04-06
 
 ### Features
 
 - Glob support for parameters
-
-## [0.6.0] - 2023-04-03
+- Add support for globbing
 
 ## [0.5.5] - 2023-04-03
 
@@ -48,7 +49,6 @@ All notable changes to this project will be documented in this file.
 
 ### CHORE
 
-- Changelog update
 - Release automation
 - Merge main
 
@@ -61,6 +61,7 @@ All notable changes to this project will be documented in this file.
 ### CHORE
 
 - Version bump
+- Changelog update
 
 ### REFACTOR
 
