@@ -5,6 +5,15 @@ use std::path::PathBuf;
 use crate::types::{BlockType, DocItem};
 
 /// Outputs a summary of the number of files processed, etc.
+///
+/// # Arguments
+///
+/// * `file_list` - The list of files processed
+/// * `result` - The list of `DocItem`s
+///
+/// # Returns
+///
+/// Nothing.
 pub fn print_summary(file_list: &Vec<PathBuf>, result: &[DocItem]) {
     println!("Files processed:      {:5}", file_list.len());
 

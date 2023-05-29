@@ -8,6 +8,23 @@ use std::{fs::File, path::PathBuf};
 use crate::types::{BlockType, DocItem};
 
 /// Exports results to CSV
+///
+/// # Arguments
+///
+/// * `filename` - The name of the file to export to
+/// * `result` - The results to export
+///
+/// # Returns
+///
+/// * `Ok(())` - If the export was successful
+/// * `Err(Box<dyn std::error::Error>)` - If the export failed
+///
+/// # Example
+///
+/// ```ignore
+/// let result = tfdoc::process_dirs(&dirs, &settings);
+/// tfdoc::exporter::export_csv("results.csv", &result);
+/// ```
 pub fn export_csv(
     filename: &str,
     result: &[DocItem],
@@ -29,7 +46,7 @@ pub fn export_csv(
             }
 
             // Data and Resources we split into type and name
-            // TODO: Create separate items in the original struct and handle it properly
+            // TODO: Create separate items in the original struct and handle it properly there
             if !item.filename.is_empty() {
                 if item.category == BlockType::Data || item.category == BlockType::Resource {
                     let type_name: Vec<&str> = item.name.split('.').collect();
@@ -54,6 +71,18 @@ pub fn export_csv(
 }
 
 /// Exports the results to a markdown file
+///
+/// # Arguments
+///
+/// * `md_file` - The name of the markdown file to export to
+/// * `file_list` - The list of files to include in the markdown file
+/// * `result` - The results to export
+/// * `as_table` - Whether to export as a table or not
+///
+/// # Returns
+///
+/// * `Ok(())` - If the export was successful
+/// * `Err(Box<dyn std::error::Error>)` - If the export failed
 pub fn export_markdown(
     md_file: &str,
     file_list: &Vec<PathBuf>,
@@ -121,6 +150,19 @@ fn export_title_block(
 }
 
 /// Export resources to a Markdown file
+///
+/// # Arguments
+///
+/// * `filename` - The name of the file to export to
+/// * `result` - The results to export
+/// * `name` - The name of the block
+/// * `variant` - The type of block
+/// * `as_table` - Whether to export as a table or not
+///
+/// # Returns
+///
+/// * `Ok(())` - If the export was successful
+/// * `Err(Box<dyn std::error::Error>)` - If the export failed
 fn export_resources(
     filename: &str,
     result: &[DocItem],
@@ -173,6 +215,19 @@ fn export_resources(
 }
 
 /// Exports the interfaces (ie. the `variable` and `output` sections) to Markdown
+///
+/// # Arguments
+///
+/// * `filename` - The name of the file to export to
+/// * `result` - The results to export
+/// * `name` - The name of the block
+/// * `variant` - The type of block
+/// * `as_table` - Whether to export as a table or not
+///
+/// # Returns
+///
+/// * `Ok(())` - If the export was successful
+/// * `Err(Box<dyn std::error::Error>)` - If the export failed
 fn export_interfaces(
     filename: &str,
     result: &[DocItem],
@@ -213,12 +268,23 @@ fn export_interfaces(
     Ok(())
 }
 
-/// Exports the file list
+/// Exports the file list to Markdown
+///
+/// # Arguments
+///
+/// * `filename` - The name of the file to export to
+/// * `file_list` - The list of files to export
+/// * `table` - Whether to export as a table or not
+///
+/// # Returns
+///
+/// * `Ok(())` - If the export was successful
+/// * `Err(Box<dyn std::error::Error>)` - If the export failed
 fn export_file_list(
     filename: &str,
     file_list: &Vec<PathBuf>,
     table: bool,
-) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
+) -> Result<(), Box<(dyn std::error::Error)>> {
     let full_filename = shellexpand::full(filename)?.to_string();
     let mut ef = OpenOptions::new()
         .write(true)

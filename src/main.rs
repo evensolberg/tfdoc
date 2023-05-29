@@ -1,11 +1,6 @@
 //! The main binary file responsible for parsing the Terraform files and outputting the Markdown code.
 //!
-//! Usage: `tfdoc [-t] PATH`
-//!
-//! If PATH is omitted, the current directory is used.
-//!
-//! Use the `-t` parameter to output the documentation in table format rather than list format.
-
+//! Usage: `tfdoc -h` for help
 #![forbid(unsafe_code)]
 
 use std::env;

@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### Build
+
+- Bump clap from 4.2.1 to 4.2.2
+- Bump clap from 4.2.2 to 4.2.4
+- Bump clap from 4.2.4 to 4.2.5
+- Bump clap from 4.2.5 to 4.2.7
+- Bump clap from 4.2.7 to 4.3.0
+- Bump log from 0.4.17 to 0.4.18
+
+### Doc
+
+- Update Changelog.md
+
 ## [0.7.0] - 2023-04-12
 
 ### Features

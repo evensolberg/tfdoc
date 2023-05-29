@@ -17,6 +17,14 @@ enum Directive {
 
 /// Read a file and return a parsed list of `DocItems`
 ///
+/// # Arguments
+///
+/// * `filename` - The name of the file to parse
+///
+/// # Returns
+///
+/// * `Ok(Vec<DocItem>)` - The parsed list of `DocItems`
+///
 /// # Errors
 ///  - Unable to parse the line
 pub fn parse_hcl(filename: &PathBuf) -> std::io::Result<Vec<DocItem>> {
@@ -27,6 +35,7 @@ pub fn parse_hcl(filename: &PathBuf) -> std::io::Result<Vec<DocItem>> {
         let state = parse_line(filename, &line?, result.pop().unwrap_or_default());
         log::trace!("parse_hcl::state = {:?}", state);
         result.push(state.0);
+
         if state.1 == Directive::Stop {
             result.push(DocItem::new());
         }
@@ -110,6 +119,7 @@ fn parse_regular(
 ) -> (DocItem, Directive) {
     result.category = category;
     result.name = parser_function(line);
+    
     if line.trim().ends_with('}') {
         (result, Directive::Stop)
     } else {
