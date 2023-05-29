@@ -1,7 +1,7 @@
 [package]
 name = "tfdoc"
 edition = "2021"
-version = "0.7.1"
+version = "0.7.2"
 authors = ["Even Solberg <even.solberg@gmail.com>, Thomas Maurin <maur1th@users.noreply.github.com>"]
 license = "Apache-2.0"
 repository = "https://github.com/evensolberg/tfdoc"

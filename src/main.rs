@@ -8,7 +8,6 @@ use std::env;
 use clap::parser::ValueSource;
 use env_logger::Env;
 use glob::glob;
-use shellexpand;
 
 use crate::printer::print_summary;
 
@@ -35,11 +34,7 @@ fn run_app() -> Result<(), Box<(dyn std::error::Error + 'static)>> {
         .collect();
 
     // Determine whether to process quietly or not
-    let quiet = if cli_args.value_source("quiet") == Some(ValueSource::CommandLine) {
-        true
-    } else {
-        false
-    };
+    let quiet = cli_args.value_source("quiet") == Some(ValueSource::CommandLine);
 
     // Parse the files found and put them into a list
     let mut result: Vec<types::DocItem> = vec![];

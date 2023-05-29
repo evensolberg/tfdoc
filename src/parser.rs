@@ -119,7 +119,7 @@ fn parse_regular(
 ) -> (DocItem, Directive) {
     result.category = category;
     result.name = parser_function(line);
-    
+
     if line.trim().ends_with('}') {
         (result, Directive::Stop)
     } else {

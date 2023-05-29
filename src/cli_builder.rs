@@ -56,7 +56,7 @@ pub fn build_cli(version: &'static str) -> Command {
             Arg::new("quiet")
             .short('q')
             .long("quiet")
-            .help("Suppress output and sliently proceess inputs")
+            .help("Suppress output and silently proceess inputs")
             .long_help("Does not produce any output other than error messages if something goes wrong.")
             .num_args(0)
             .action(ArgAction::SetTrue)
