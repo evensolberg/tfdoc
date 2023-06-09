@@ -27,7 +27,7 @@ The Releases section of this repository also contains binary builds for various 
 ## Usage
 
 ```sh
-$ tfdoc <DIR> [OPTIONS]
+$ tfdoc <DIR(S)> [OPTIONS]
 
 Arguments:
   [DIR(S)]  The directories to process. [default: .]
