@@ -15,6 +15,7 @@ use crate::types::{BlockType, DocItem};
 ///
 /// Nothing.
 pub fn print_summary(file_list: &Vec<PathBuf>, result: &[DocItem]) {
+    println!("---");
     println!("Files processed:      {:5}", file_list.len());
 
     let mut data = 0;
