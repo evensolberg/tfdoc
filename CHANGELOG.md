@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### Doc
+
+- README update
+
 ## [0.8.1] - 2023-06-09
 
 ### Chore
