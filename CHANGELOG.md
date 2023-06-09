@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### Chore
+
+- Remove Windows target
+- Updated dependencies
+
+### Cicd
+
+- Configure code coverage
+
+### Refactor
+
+- A few little optimizations
+
+## [0.7.2] - 2023-05-29
+
+### Doc
+
+- Documented some code
+
+## [0.7.1] - 2023-05-29
+
 ### Build
 
 - Bump clap from 4.2.1 to 4.2.2

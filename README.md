@@ -14,30 +14,33 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 # Building the application from the repository directory:
 cargo build --release
+
+# Alternatively, you can install the application directly:
+cargo install --path .
 ```
 
-The resulting binary can be found in `target/release/` and can be moved to somewhere in your path, for example `/usr/local/bin`
+The resulting binary can be found in `target/release/` and can be moved to somewhere in your path, for example `/usr/local/bin`.
+If you use `cargo install`, the binary will be installed in `~/.cargo/bin` by default.
 
 The Releases section of this repository also contains binary builds for various platforms.
 
 ## Usage
 
 ```sh
-$ tfdoc <DIR(S)> [OPTIONS]
+$ tfdoc <DIR> [OPTIONS]
 
 Arguments:
-  [DIR(S)]...  One or more directories to process. [default: .]
+  [DIR]  The directory to process. [default: .]
 
 Options:
   -l, --list [<FILE>]   Output the results as lists in a Markdown file. Default file name: tfdoc_summary_lists.md
   -t, --table [<FILE>]  Output the results as tables in a Markdown file. Default file name: tfdoc_summary_tables.md
   -c, --csv [<FILE>]    Output to a CSV file with the name provided. Default file name: tfdoc_summary.csv
   -q, --quiet           Suppress output and silently proceess inputs
+  -r, --recurse         Recursively process directories
   -h, --help            Print help (see more with '--help')
   -V, --version         Print version
 ```
-
-You can specify more than one directory thusly: `tfdoc dir1/ dir2/ dir3/`. Depending on your operating system, you can also use the `**` glob [^1]: `tfdoc modules/**`.
 
 |Option|Description|
 |------|-----------|
@@ -45,6 +48,7 @@ You can specify more than one directory thusly: `tfdoc dir1/ dir2/ dir3/`. Depen
 |`-l <list_filename>`, `--table <list_filename>`|Export the results as a set of markdown lists into the file supplied. Default file name if none is supplied is `tfdoc_summary_lists.md`|
 |`-t <table_filename>`, `--table <table_filename>`|Export the results as a set of markdown tables into the file supplied. Default file name if none is supplied is `tfdoc_summary_tables.md`|
 |`-q`, `--quiet`|Do not produce any output other than error messages if something goes wrong.|
+|`-r`, `--recurse`|Recursively process directories below the one specified.|
 |`-h`, `--help`|Prints help in short form with `-h` and long form with `--help`|
 |`-V`, `--version`|Prints version information|
 
@@ -62,7 +66,3 @@ Starting the application with the environment variable specified can be done lik
 ## Acknowledgements
 
 - This builds on the original [`tfdoc`](https://github.com/maur1th/tfdoc) by [Thomas Maurin](https://github.com/maur1th)
-
-## Footnotes
-
-[^1]: You may need to use `setopt EXTENDED_GLOB` in order to enable extended globbing, depending on your shell.
