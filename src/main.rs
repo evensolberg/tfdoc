@@ -24,11 +24,10 @@ mod util;
 fn run_app() -> Result<(), Box<(dyn std::error::Error + 'static)>> {
     // Set up the command line. Ref https://docs.rs/clap for details.
     let cli_args = cli_builder::build_cli(env!("CARGO_PKG_VERSION")).get_matches();
-    log::debug!("cli_args = {:?}", cli_args);
+    log::debug!("cli_args = {cli_args:?}");
 
     // Determine whether to process quietly or not
     let quiet = cli_args.value_source("quiet") == Some(ValueSource::CommandLine);
-    let recurse = cli_args.value_source("recurse") == Some(ValueSource::CommandLine);
 
     // Determine the directories to process
     let dirs: Vec<&str> = cli_args
@@ -38,8 +37,7 @@ fn run_app() -> Result<(), Box<(dyn std::error::Error + 'static)>> {
         .collect();
 
     let mut process_paths: Vec<String> = vec![];
-
-    if recurse {
+    if cli_args.value_source("recurse") == Some(ValueSource::CommandLine) {
         for dir in dirs {
             let dir = std::path::Path::new(dir).to_string_lossy().to_string();
             build_directory_list(&dir, &mut process_paths);
