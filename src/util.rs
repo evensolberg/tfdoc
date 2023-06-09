@@ -4,6 +4,7 @@ use std::ffi::OsStr;
 use std::fs;
 use std::io;
 use std::path::{Path, PathBuf};
+use walkdir::WalkDir;
 
 /// Returns a list of Terraform files based on the file extension `.tf`
 ///
@@ -21,4 +22,26 @@ pub fn list_tf_files(dir: &Path) -> io::Result<Vec<PathBuf>> {
         }
     }
     Ok(result)
+}
+
+/// Build a list of directories to process
+///
+/// # Arguments
+///
+/// * `starting_point` - The directory to start from
+///
+/// # Returns
+///
+/// * `Vec<String>` - A list of directories to process
+pub fn build_directory_list(starting_point: &str, directory_list: &mut Vec<String>) {
+    for entry in WalkDir::new(starting_point)
+        .into_iter()
+        .filter_map(std::result::Result::ok)
+    {
+        let path = entry.path();
+        if path.is_dir() {
+            let directory_path = path.to_string_lossy().to_string();
+            directory_list.push(directory_path);
+        }
+    }
 }

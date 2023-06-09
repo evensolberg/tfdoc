@@ -7,9 +7,6 @@ use std::env;
 
 use clap::parser::ValueSource;
 use env_logger::Env;
-use walkdir::WalkDir;
-
-use crate::printer::print_summary;
 
 // Locally defined crates
 
@@ -40,7 +37,7 @@ fn run_app() -> Result<(), Box<(dyn std::error::Error + 'static)>> {
     if cli_args.value_source("recurse") == Some(ValueSource::CommandLine) {
         for dir in dirs {
             let dir = std::path::Path::new(dir).to_string_lossy().to_string();
-            build_directory_list(&dir, &mut process_paths);
+            util::build_directory_list(&dir, &mut process_paths);
         }
     } else {
         for dir in dirs {
@@ -87,7 +84,7 @@ fn run_app() -> Result<(), Box<(dyn std::error::Error + 'static)>> {
 
     if !quiet {
         println!("---");
-        print_summary(&all_tf_files, &result);
+        printer::print_summary(&all_tf_files, &result);
     }
 
     // Return safely
@@ -102,33 +99,11 @@ fn main() {
     env_logger::init_from_env(env);
 
     // Run the application
-    ::std::process::exit(match run_app() {
+    std::process::exit(match run_app() {
         Ok(_) => 0,
         Err(err) => {
             eprintln!("error: {err}");
             1
         }
     });
-}
-
-/// Build a list of directories to process
-///
-/// # Arguments
-///
-/// * `starting_point` - The directory to start from
-///
-/// # Returns
-///
-/// * `Vec<String>` - A list of directories to process
-fn build_directory_list(starting_point: &str, directory_list: &mut Vec<String>) {
-    for entry in WalkDir::new(starting_point)
-        .into_iter()
-        .filter_map(std::result::Result::ok)
-    {
-        let path = entry.path();
-        if path.is_dir() {
-            let directory_path = path.to_string_lossy().to_string();
-            directory_list.push(directory_path);
-        }
-    }
 }
