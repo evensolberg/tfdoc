@@ -4,9 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### Chore
+
+- Changelog update
+
 ### Doc
 
 - README update
+- README update
+
+### Refactor
+
+- Move the directory builder function to util
+- Change variable and function names
 
 ## [0.8.1] - 2023-06-09
 

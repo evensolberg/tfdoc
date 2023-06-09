@@ -2,7 +2,10 @@
 
 This project aims at generating Terraform module documentation.
 
-tfdoc will parse all the `.tf` files within a module's directory and generate markdown code to `stdout`. This can easily be piped to a file: `tfdoc > result.md`
+`tfdoc` will parse all the `.tf` files within a module's directory and generate markdown code blocks for each resource, data, variable and output block.
+It will also include any comments that are placed directly above the block.
+
+> **_NOTE: If no output options are specified, the application will still process the files, but will not produce any output._**
 
 ## Installation
 
@@ -57,8 +60,6 @@ You can specify multiple target directories like this:
 ```sh
 tfdoc tests/simple tests/test-fixtures
 ```
-
-> **_NOTE: If no output options are specified, the application will still process the files, but will not produce any output._**
 
 ## Expected Terraform File Formatting
 
