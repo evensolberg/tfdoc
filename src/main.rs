@@ -7,7 +7,7 @@ use std::env;
 
 use clap::parser::ValueSource;
 use env_logger::Env;
-use glob::glob;
+use walkdir::WalkDir;
 
 use crate::printer::print_summary;
 
@@ -26,42 +26,48 @@ fn run_app() -> Result<(), Box<(dyn std::error::Error + 'static)>> {
     let cli_args = cli_builder::build_cli(env!("CARGO_PKG_VERSION")).get_matches();
     log::debug!("cli_args = {:?}", cli_args);
 
-    // Look for the path(s) to process or just use the current directory if none is given
-    let process_paths: Vec<&str> = cli_args
+    // Determine whether to process quietly or not
+    let quiet = cli_args.value_source("quiet") == Some(ValueSource::CommandLine);
+    let recurse = cli_args.value_source("recurse") == Some(ValueSource::CommandLine);
+
+    // Determine the directories to process
+    let dirs: Vec<&str> = cli_args
         .get_many::<String>("dirs")
         .unwrap_or_default()
         .map(std::string::String::as_ref)
         .collect();
 
-    // Determine whether to process quietly or not
-    let quiet = cli_args.value_source("quiet") == Some(ValueSource::CommandLine);
+    let mut process_paths: Vec<String> = vec![];
+
+    if recurse {
+        for dir in dirs {
+            let dir = std::path::Path::new(dir).to_string_lossy().to_string();
+            build_directory_list(&dir, &mut process_paths);
+        }
+    } else {
+        for dir in dirs {
+            process_paths.push(dir.to_string());
+        }
+    }
+    log::debug!("process_paths = {process_paths:?}");
 
     // Parse the files found and put them into a list
     let mut result: Vec<types::DocItem> = vec![];
     let mut all_tf_files = vec![];
 
     // Iterate through the paths supplied
-    for path_arg in process_paths {
-        let exp_path = shellexpand::full(path_arg)?;
-        let paths = glob(&exp_path)?;
+    for current_path in process_paths {
+        // Find just the Terraform files
+        let path = std::path::Path::new(&current_path);
+        let tf_files = util::list_tf_files(path)?;
 
-        for path_res in paths {
-            let Ok(current_path) = path_res else {
-                let err = format!("Unable to parse {path_res:?}.");
-                return Err(err.into())
-            };
-
-            // Find just the Terraform files
-            let tf_files = util::list_tf_files(&current_path)?;
-
-            // Process the terraform files
-            for tf_file in &tf_files {
-                all_tf_files.push(tf_file.clone());
-                result.append(&mut parser::parse_hcl(&tf_file.clone())?);
-                let tff = tf_file.to_str().unwrap_or("Unknown");
-                if !quiet {
-                    println!("{tff}");
-                }
+        // Process the terraform files
+        for tf_file in &tf_files {
+            all_tf_files.push(tf_file.clone());
+            result.append(&mut parser::parse_hcl(&tf_file.clone())?);
+            let tff = tf_file.to_str().unwrap_or("Unknown");
+            if !quiet {
+                println!("{tff}");
             }
         }
     }
@@ -105,4 +111,26 @@ fn main() {
             1
         }
     });
+}
+
+/// Build a list of directories to process
+///
+/// # Arguments
+///
+/// * `starting_point` - The directory to start from
+///
+/// # Returns
+///
+/// * `Vec<String>` - A list of directories to process
+fn build_directory_list(starting_point: &str, directory_list: &mut Vec<String>) {
+    for entry in WalkDir::new(starting_point)
+        .into_iter()
+        .filter_map(std::result::Result::ok)
+    {
+        let path = entry.path();
+        if path.is_dir() {
+            let directory_path = path.to_string_lossy().to_string();
+            directory_list.push(directory_path);
+        }
+    }
 }
