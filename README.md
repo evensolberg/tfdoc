@@ -105,6 +105,8 @@ Starting the application with the environment variable specified can be done lik
 - `TFDOC_LOG=debug tfdoc .`
 - `TFDOC_LOG=trace tfdoc test/simple/ -t -c result.csv`
 
+Note that setting the logging level to `trace` may produce a lot of output.
+
 ## Acknowledgements
 
 - This builds on the original [`tfdoc`](https://github.com/maur1th/tfdoc) by [Thomas Maurin](https://github.com/maur1th)

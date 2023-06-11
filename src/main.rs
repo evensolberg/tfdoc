@@ -32,7 +32,7 @@ fn run_app() -> Result<(), Box<(dyn std::error::Error + 'static)>> {
     if cli_args.value_source("recurse") == Some(ValueSource::CommandLine) {
         for dir in dirs_to_process {
             let dir = std::path::Path::new(dir).to_string_lossy().to_string();
-            util::build_directory_list(&dir, &mut paths_to_process);
+            paths_to_process.extend(util::build_directory_list(&dir));
         }
     } else {
         for dir in dirs_to_process {

@@ -33,7 +33,9 @@ pub fn list_tf_files(dir: &Path) -> io::Result<Vec<PathBuf>> {
 /// # Returns
 ///
 /// * `Vec<String>` - A list of directories to process
-pub fn build_directory_list(starting_point: &str, directory_list: &mut Vec<String>) {
+pub fn build_directory_list(starting_point: &str) -> Vec<String> {
+    let mut directory_list: Vec<String> = vec![];
+
     for entry in WalkDir::new(starting_point)
         .into_iter()
         .filter_map(std::result::Result::ok)
@@ -44,4 +46,6 @@ pub fn build_directory_list(starting_point: &str, directory_list: &mut Vec<Strin
             directory_list.push(directory_path);
         }
     }
+
+    directory_list
 }
