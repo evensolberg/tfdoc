@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Chore
 
 - Changelog update
+- Changelog update
 
 ### Doc
 
@@ -18,6 +19,7 @@ All notable changes to this project will be documented in this file.
 
 - Move the directory builder function to util
 - Change variable and function names
+- Make the build_directory_list fn immutable
 
 ## [0.8.1] - 2023-06-09
 
