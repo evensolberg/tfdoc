@@ -4,6 +4,41 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### Build
+
+- Bump rustix from 0.37.19 to 0.37.25
+
+### Test
+
+- Add code coverage reports via Codecov
+
+## [0.8.3] - 2023-10-14
+
+### Build
+
+- Bump walkdir from 2.3.3 to 2.4.0
+- Bump clap from 4.4.2 to 4.4.3
+- Bump clap from 4.4.3 to 4.4.4
+- Bump clap from 4.4.4 to 4.4.6
+
+## [0.8.2] - 2023-09-04
+
+### Build
+
+- Bump log from 0.4.18 to 0.4.19
+- Bump clap from 4.3.1 to 4.3.3
+- Bump clap from 4.3.3 to 4.3.4
+- Bump clap from 4.3.4 to 4.3.8
+- Bump clap from 4.3.8 to 4.3.10
+- Bump clap from 4.3.10 to 4.3.11
+- Bump clap from 4.3.11 to 4.3.12
+- Bump clap from 4.3.12 to 4.3.19
+- Bump log from 0.4.19 to 0.4.20
+- Bump clap from 4.3.19 to 4.3.21
+- Bump clap from 4.3.21 to 4.3.23
+- Bump clap from 4.3.23 to 4.4.0
+- Bump clap from 4.4.0 to 4.4.2
+
 ### Chore
 
 - Changelog update
@@ -14,6 +49,7 @@ All notable changes to this project will be documented in this file.
 - README update
 - README update
 - README update
+- Changelog Update
 
 ### Refactor
 
