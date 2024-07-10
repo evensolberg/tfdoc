@@ -22,9 +22,6 @@ cargo build --release
 cargo install --path .
 ```
 
-The resulting binary can be found in `target/release/` and can be moved to somewhere in your path, for example `/usr/local/bin`.
-If you use `cargo install`, the binary will be installed in `~/.cargo/bin` by default.
-
 The Releases section of this repository also contains binary builds for various platforms.
 
 ## Usage
